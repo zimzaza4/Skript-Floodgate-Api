@@ -50,4 +50,4 @@ on submit custom form:
     set {_input} to input component id 0 of data "response"
 ```
 
-
+Recommendation: Use Floodgate-Skript to detect bedrock players
