@@ -142,17 +142,8 @@ effect send-form %object% with id %string% to %player%:
 
         set {_fp} to FloodgateApi.getInstance().getPlayer(expr-3.getUniqueId())
         {_fp}.sendForm({_F})
-expression [the] button display %string% with [the] url icon %string%:
-    return type: string
-    get: 
-        set {_b} to "url[;;]%expr-1%[;;]%expr-2%"
-        return {_b}
-        
-expression [the] button display %string% with [the] [texture] path icon %string%:
-    return type: string
-    get: 
-        set {_b} to "path[;;]%expr-1%[;;]%expr-2%"
-        return {_b}
+
+
 expression input component[ with] id %number% of %object%:
     return type: string
     get:
@@ -250,10 +241,15 @@ expression [the] [form] content %string%:
     get:
         set {_b} to "content[;;]%expr-1%"
         return {_b}
-expression [the] button display %string%:
+expression [the] button display %string%[with (path icon %-string%|url icon %-string%]:
     return type: string
     get:
-        set {_b} to "none[;;]%expr-1%"
+        if expr-2 is set:
+            set {_b} to "path[;;]%expr-1%[;;]%expr-2%"
+        else if expr-3 is set:
+            set {_b} to "url[;;]%expr-1%[;;]%expr-2%"
+        else:
+            set {_b} to "none[;;]%expr-1%"
         return {_b}
         
 #
