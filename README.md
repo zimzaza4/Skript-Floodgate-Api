@@ -33,7 +33,21 @@ add content "content" to {_Form}
 ```
 Send Form:
 ```
-send-form {_Form} to {_player}
+send-form {_Form} with id "Form_id" to {_player}
+```
+Events:
+
+  on Click Form Button:   (ModalForm and SimpleForm)
+```
+on click form button:
+    set {_id} to data "form-id"
+    set {_button} to data "button-id"
+```
+  on Submit Custom Form:   (CustomForm)
+```
+on submit custom form:
+    set {_id} to data "form-id"
+    set {_input} to input component id 0 of data "response"
 ```
 
 
