@@ -241,7 +241,7 @@ expression [the] [form] content %string%:
     get:
         set {_b} to "content[;;]%expr-1%"
         return {_b}
-expression [the] button display %string%[with (path icon %-string%|url icon %-string%]:
+expression [the] button display %string%[ with (path icon %-string%|url icon %-string%)]:
     return type: string
     get:
         if expr-2 is set:
