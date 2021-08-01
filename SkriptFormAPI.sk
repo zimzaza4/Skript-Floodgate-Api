@@ -20,6 +20,7 @@ import:
     
 on CustomFormClickEvent:
     set {_events::player} to event.getPlayer()
+
     set {_extras::form-id} to event.getFormID()
     set {_extras::response} to event.getResponse()
     set {_extras::form-title} to event.getTitle()
@@ -28,6 +29,7 @@ on CustomFormClickEvent:
 on ModalFormClickEvent:
     
     set {_events::player} to event.getPlayer()
+
     set {_extras::form-id} to event.getFormId()
     set {_extras::response} to event.getResponse()
     set {_extras::button-id} to event.getButtonID()
@@ -38,6 +40,7 @@ on ModalFormClickEvent:
 on SimpleFormClickEvent:
     
     set {_events::player} to event.getPlayer()
+
     set {_extras::form-id} to event.getFormId()
     set {_extras::response} to event.getResponse()
     set {_extras::button-id} to event.getButtonID()
