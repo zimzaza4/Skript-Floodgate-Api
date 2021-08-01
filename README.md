@@ -9,7 +9,7 @@ Allows the use of simple Skript to make Forms
 The script depends on plugins:
 - Skript
 - Skript-Reflect
-- BEMenuAPI (https://github.com/zimzaza4/Skript-Floodgate-Form/releases/tag/1.0)
+- [BEMenuAPI](https://github.com/zimzaza4/Skript-Floodgate-Form/releases/tag/1.0)
 - Floodgate
 
 
