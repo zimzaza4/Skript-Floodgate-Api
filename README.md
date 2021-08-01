@@ -3,9 +3,8 @@ A simple skript
 
 Allows the use of simple Skript to make Forms
 
-- How to install?: 
-After confirming to install all dependent plugins, put this script into plugins/Skript/scripts/
-and reload it
+**How to install?** 
+- After confirming to install all dependent plugins, put this script into plugins/Skript/scripts/ and reload it
 
 The skript depends on plugins:
 - Skript
