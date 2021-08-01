@@ -1,7 +1,7 @@
 # Skript-Floodgate-Form
 A simple skript
 
-
+Allows the use of simple Skript to make Forms
 
 
 The skript depends on plugins:
@@ -50,4 +50,5 @@ on submit custom form:
     set {_input} to input component id 0 of data "response"
 ```
 
-Recommendation: Use Floodgate-Skript to detect bedrock players
+Recommendation:
+ Use Floodgate-Skript to detect bedrock players
