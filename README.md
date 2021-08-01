@@ -1,12 +1,12 @@
 # Skript-Floodgate-Form
-A simple skript
+A simple script
 
 Allows the use of simple Skript to make Forms
 
 **How to install?** 
 - After confirming to install all dependent plugins, put this script into plugins/Skript/scripts/ and reload it
 
-The skript depends on plugins:
+The script depends on plugins:
 - Skript
 - Skript-Reflect
 - BEMenuAPI
