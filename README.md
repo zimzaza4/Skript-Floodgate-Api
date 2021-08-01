@@ -14,7 +14,7 @@ The script depends on plugins:
 
 
 
-#Example
+[Example](https://github.com/zimzaza4/Skript-Floodgate-Form/wiki/Example)
 
 Create a Form:
 ```
