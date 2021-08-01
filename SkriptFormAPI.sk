@@ -22,6 +22,7 @@ on CustomFormClickEvent:
     set {_events::player} to event.getPlayer()
     set {_extras::form-id} to event.getFormID()
     set {_extras::response} to event.getResponse()
+    set {_extras::form-title} to event.getTitle()
     call custom event "submit custom form" with {_events::*} data {_extras::*}
 
 on ModalFormClickEvent:
@@ -47,7 +48,7 @@ expression button id of %object%:
     return type: number
     get:
         return expr-1.getButtonID()
-expression form id of %object%:
+expression form id of [response ]%object%:
     return type: string
     get:
         if expr-1.getFormId() is not null:
@@ -144,34 +145,38 @@ effect send-form %object% with id %string% to %player%:
         {_fp}.sendForm({_F})
 
 
-expression input component[ with] id %number% of %object%:
+expression input component[ with] id %number% of [response {%object%:
     return type: string
     get:
         set {_r} to expr-2.getInput(expr-1)
         return {_r}
-expression toggle component[ with] id %number% of %object%:
+expression toggle component[ with] id %number% of [response ]%object%:
     return type: boolean
     get:
         set {_r} to expr-2.getToggle(expr-1)
         return {_r}
-expression slider component[ with] id %number% of %object%:
+expression slider component[ with] id %number% of [response ]%object%:
     return type: number
     get:
         set {_r} to expr-2.getSlider(expr-1)
         return {_r}
     
-expression step slide[r] component[ with] id %number% of %object%:
+expression step slide[r] component[ with] id %number% of [response ]%object%:
     return type: number
     get:
         set {_r} to expr-2.getStepSlide(expr-1)
         return {_r}
-expression dropdown component[ with] id %number% of %object%:
+expression dropdown component[ with] id %number% of [response ]%object%:
     return type: number
     get:
         set {_r} to expr-2.getDropdown(expr-1)
         return {_r}
-
-expression component[ with] id %number% of %object%:
+expression form title of [response ]%object%:
+    return type: string
+    get:
+        set {_r} to expr-1.getTitle()
+        return {_r}
+expression component[ with] id %number% of [response ]%object%:
     return type: string
     get:
         
