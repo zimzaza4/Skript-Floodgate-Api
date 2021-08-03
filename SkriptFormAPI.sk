@@ -1,3 +1,9 @@
+#The script depends on plugins:
+#Skript
+#Skript-Reflect
+#BEMenuAPI
+#Floodgate
+
 
 import:
     org.geysermc.floodgate.api.FloodgateApi
