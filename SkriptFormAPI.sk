@@ -148,7 +148,7 @@ effect send-form %object% with id %string% to %player%:
         {_fp}.sendForm({_F})
 
 
-expression input component[ with] id %number% of [response {%object%:
+expression input component[ with] id %number% of [response ]%object%:
     return type: string
     get:
         set {_r} to expr-2.getInput(expr-1)
