@@ -8,7 +8,7 @@ Allows the use of simple Skript to make Forms
 
 
 **如何安装?**
-- 装上Skript, Skript-Reflect, BEMenuAPI(https://github.com/zimzaza4/Skript-Floodgate-Form/releases/tag/1.0) 插件
+- 装上Skript, Skript-Reflect, [BEMenuAPI](https://github.com/zimzaza4/Skript-Floodgate-Form/releases/tag/1.0) 插件
 - 将该脚本放入该放的文件夹 plugins/Skript/scripts/
 - 启动服务器
 
