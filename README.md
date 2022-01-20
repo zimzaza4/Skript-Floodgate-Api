@@ -58,6 +58,6 @@ on submit custom form:
     set {_id} to data "form-id"
     set {_input} to input component id 0 of data "response"
 ```
-
+(一些语法懒得补了，自己翻吧)
 Recommendation:
  Use Floodgate-Skript to detect bedrock players
