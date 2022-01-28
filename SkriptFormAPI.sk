@@ -6,6 +6,9 @@
 
 
 import:
+
+    org.bukkit.entity.Player
+
     org.geysermc.floodgate.api.FloodgateApi
     org.geysermc.cumulus.SimpleForm
     org.geysermc.cumulus.ModalForm
@@ -14,9 +17,6 @@ import:
     org.geysermc.cumulus.util.FormImage
     org.geysermc.cumulus.util.FormType
     org.geysermc.cumulus.util.ComponentType
-    org.bukkit.entity.Player
-   
-   
     org.geysermc.cumulus.util.FormImage$Type
     
     me.zimzaza4.LForm
@@ -26,16 +26,14 @@ import:
     
 on CustomFormClickEvent:
     set {_events::player} to event.getPlayer()
-
     set {_extras::form-id} to event.getFormID()
     set {_extras::response} to event.getResponse()
     set {_extras::form-title} to event.getTitle()
-    call custom event "submit custom form" with {_events::*} data {_extras::*}
+   
+ call custom event "submit custom form" with {_events::*} data {_extras::*}
 
-on ModalFormClickEvent:
-    
+on ModalFormClickEvent: 
     set {_events::player} to event.getPlayer()
-
     set {_extras::form-id} to event.getFormId()
     set {_extras::response} to event.getResponse()
     set {_extras::button-id} to event.getButtonID()
@@ -43,20 +41,22 @@ on ModalFormClickEvent:
 
     call custom event "click button of form" with {_events::*} data {_extras::*}
 
-on SimpleFormClickEvent:
-    
+on SimpleFormClickEvent:  
     set {_events::player} to event.getPlayer()
-
     set {_extras::form-id} to event.getFormId()
     set {_extras::response} to event.getResponse()
     set {_extras::button-id} to event.getButtonID()
     set {_extras::button-name} to event.getButtonName()
 
     call custom event "click button of form" with {_events::*} data {_extras::*}
+
+
 expression button id of %object%:
     return type: number
     get:
         return expr-1.getButtonID()
+
+
 expression form id of [response ]%object%:
     return type: string
     get:
@@ -70,6 +70,8 @@ expression form id of [response ]%object%:
 custom event "submit custom form":
     pattern: submit custom form
     event-values: player
+
+
 custom event "click button of form":
     pattern: click form button
     event-values: player
@@ -89,15 +91,13 @@ expression [the] custom form with title %string%:
         
 
 expression [the] modal form with title %string% and button[s] %string% %string%:
-
-
     return type: object
     get: 
-        set {_F} to ModalForm.builder().title(expr-1)
-        
+        set {_F} to ModalForm.builder().title(expr-1)    
         {_F}.button1(expr-2).button2(expr-3)
-        
         return {_F}
+
+
 expression [the] dropdown [component] display[s] %string% with [the] option[s] %strings%:
     return type: strings
     get: 
@@ -106,6 +106,7 @@ expression [the] dropdown [component] display[s] %string% with [the] option[s] %
         set {_s::2} to expr-1
         set {_s::3} to join {_a::*} by "[;;]"
         return {_s::*}
+
 
 expression [the] toggle [component] display[s] %string%[ with( | state )%-boolean%]:
     return type: strings
@@ -116,16 +117,14 @@ expression [the] toggle [component] display[s] %string%[ with( | state )%-boolea
             set {_s::3} to "%expr-2%"
         return {_s::*}
 
+
 expression [the] input [component] display[s] %string% with placeholder %string% and (text|default text) %string%:
     return type: strings
     get:
         set {_s::1} to "input"
         set {_s::2} to expr-1
-    
-        set {_s::3} to expr-2
-        
+        set {_s::3} to expr-2  
         set {_s::4} to expr-3
-    
         return {_s::*}
 
 expression [the] slider component display[s] %string% with min[imum][ value] %number%(,| ,|, )max[imum][ value] %number%(,| ,|, )step %number%(,| ,|, )default [value ]%number%:
@@ -142,7 +141,6 @@ expression [the] slider component display[s] %string% with min[imum][ value] %nu
 effect send-form %object% with id %string% to %player%:
     trigger:
         set {_F} to expr-1.build()
-      
         if {_F}.getType() is FormType.SIMPLE_FORM:
             set {_F} to LForm.SimpleListener(expr-3, expr-1, expr-2)
         else if {_F}.getType() is FormType.MODAL_FORM:
@@ -159,40 +157,50 @@ expression input component[ with] id %number% of [response ]%object%:
     get:
         set {_r} to expr-2.getInput(expr-1)
         return {_r}
+
+
 expression toggle component[ with] id %number% of [response ]%object%:
     return type: boolean
     get:
         set {_r} to expr-2.getToggle(expr-1)
         return {_r}
+
+
 expression slider component[ with] id %number% of [response ]%object%:
     return type: number
     get:
         set {_r} to expr-2.getSlider(expr-1)
         return {_r}
     
+
 expression step slide[r] component[ with] id %number% of [response ]%object%:
     return type: number
     get:
         set {_r} to expr-2.getStepSlide(expr-1)
         return {_r}
+
+
 expression dropdown component[ with] id %number% of [response ]%object%:
     return type: number
     get:
         set {_r} to expr-2.getDropdown(expr-1)
         return {_r}
+
+
 expression form title of [response ]%object%:
     return type: string
     get:
         set {_r} to expr-1.getTitle()
         return {_r}
+
+
 expression component[ with] id %number% of [response ]%object%:
     return type: string
     get:
-        
-
         set {_t} to expr-2.getComponentTypes().toString().replaceAll("[\[\]]", "").split(",")
         set {_t} to {_t}[expr-1]
         if {_t} is "SLIDER":
+
             set {_r} to expr-2.getSlider(expr-1)
         
         else if {_t} is "STEP_SLIDER":
@@ -212,6 +220,8 @@ expression component[ with] id %number% of [response ]%object%:
             set {_r} to expr-2.getInput(expr-1)
                 
         return "%{_r}%"
+
+
 effect add %strings% to [form] %object%:
     trigger:
         set {_a::*} to expr-1
@@ -232,12 +242,7 @@ effect add %strings% to [form] %object%:
             set {_step} to {_a::5} parsed as number
             set {_default} to {_a::6} parsed as number
             expr-2.slider({_a::2}, {_min}, {_max}, {_step}, {_default})
-            
-                
-
-
         else:
-
             set {_s::*} to split {_a::1} by "[;;]"
             if {_s::1} is "url":
                 expr-2.button({_s::2}, Type.URL, {_s::3})
@@ -266,4 +271,4 @@ expression [the] button display %string%[ with (path icon %-string%|url icon %-s
             set {_b} to "none[;;]%expr-1%"
         return {_b}
         
-#
+
