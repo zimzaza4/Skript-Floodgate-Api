@@ -30,7 +30,7 @@ on CustomFormClickEvent:
     set {_extras::response} to event.getResponse()
     set {_extras::form-title} to event.getTitle()
    
- call custom event "submit custom form" with {_events::*} data {_extras::*}
+    call custom event "submit custom form" with {_events::*} data {_extras::*}
 
 on ModalFormClickEvent: 
     set {_events::player} to event.getPlayer()
