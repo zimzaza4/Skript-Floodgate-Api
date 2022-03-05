@@ -1,5 +1,5 @@
 # Skript-Floodgate-Form
-A simple script
+A simple script api
 
 Allows the use of simple Skript to make Forms
 
