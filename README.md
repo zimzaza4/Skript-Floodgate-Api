@@ -1,5 +1,5 @@
 # Skript-Floodgate-Form
-A simple script api
+A simple Skript API
 
 Allows the use of simple Skript to make Forms
 
@@ -8,16 +8,16 @@ Allows the use of simple Skript to make Forms
 
 
 **如何安装?**
-- 装上Skript, Skript-Reflect, [BEMenuAPI](https://github.com/zimzaza4/Skript-Floodgate-Form/releases/tag/1.0) 插件
+- 装上Skript, [Skript-Reflect](https://github.com/TPGamesNL/skript-reflect/releases), [BEMenuAPI](https://github.com/zimzaza4/Skript-Floodgate-Form/releases/tag/1.0) 插件
 - 将该脚本放入该放的文件夹 plugins/Skript/scripts/
 - 启动服务器
 
 
-The script depends on plugins:
-- Skript
-- Skript-Reflect
+The skript depends on plugins:
+- [Skript](https://github.com/SkriptLang/Skript/releases)
+- [Skript-Reflect](https://github.com/TPGamesNL/skript-reflect/releases)
 - [BEMenuAPI](https://github.com/zimzaza4/Skript-Floodgate-Form/releases/tag/1.0)
-- Floodgate
+- [Floodgate](https://ci.opencollab.dev/job/GeyserMC/job/Floodgate/job/master/)
 
 
 
