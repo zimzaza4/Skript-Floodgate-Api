@@ -26,12 +26,17 @@ import:
     
 
 on load:
+    delete {floodgateApiCache::*}
     set {_floodgate_skript} to Bukkit.getPluginManager().getPlugin("Floodgate-Skript")
     if {_floodgate_skript} is set:
         send "&cYou don't need Floodgate-Skript any more" to console
         Bukkit.getPluginManager().disablePlugin({_floodgate_skript})
-    delete {floodgateApiCache::*}
-
+        wait 5 second
+        while true is true:
+            send "&cPlease remove Floodgate-Skript from your plugins folder and restart the server" to console
+            wait 5 second
+    
+    
 on unload:
     delete {floodgateApiCache::*}
     
