@@ -6,7 +6,7 @@
 
 
 import:
-
+    org.bukkit.Bukkit
     org.bukkit.entity.Player
 
     org.geysermc.floodgate.api.FloodgateApi
@@ -26,6 +26,10 @@ import:
     
 
 on load:
+    set {_floodgate_skript} to Bukkit.getPluginManager().getPlugin("floodgate-skript")
+    if {_floodgate_skript} is set:
+        send "&cYou don't need Floodgate-Skript any more" to console
+        Bukkit.getPluginManager().disablePlugin({_floodgate_skript})
     delete {floodgateApiCache::*}
 
 on unload:
@@ -50,7 +54,6 @@ on join with priority lowest:
         set {_device} to "Java"
         set {_ui} to "JAVA"
         
-    
     saveFloodgatePlayerInfo({_p}, "ui", {_ui})
     saveFloodgatePlayerInfo({_p}, "locate", {_locate})
     saveFloodgatePlayerInfo({_p}, "device", {_device})
