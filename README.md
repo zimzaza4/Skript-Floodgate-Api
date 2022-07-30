@@ -60,4 +60,4 @@ on submit custom form:
 ```
 (一些语法懒得补了，自己翻吧)
 Recommendation:
- Use Floodgate-Skript to detect bedrock players
+ You don't need Floodgate-Skript any more
