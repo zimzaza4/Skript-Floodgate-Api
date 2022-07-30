@@ -26,7 +26,7 @@ import:
     
 
 on load:
-    set {_floodgate_skript} to Bukkit.getPluginManager().getPlugin("floodgate-skript")
+    set {_floodgate_skript} to Bukkit.getPluginManager().getPlugin("Floodgate-Skript")
     if {_floodgate_skript} is set:
         send "&cYou don't need Floodgate-Skript any more" to console
         Bukkit.getPluginManager().disablePlugin({_floodgate_skript})
@@ -215,7 +215,7 @@ expression [the] slider component display[s] %string% with min[imum][ value] %nu
         set {_s::6} to "%expr-5%"
         return {_s::*}
         
-effect send-form %object% with id %string% to %player%:
+effect send[-]form %object% with id %string% to %player%:
     trigger:
         set {_F} to expr-1.build()
         if {_F}.getType() is FormType.SIMPLE_FORM:
