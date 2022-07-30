@@ -1,4 +1,4 @@
-# Skript-Floodgate-Form
+# Skript-Floodgate-Api
 A simple Skript API
 
 Allows the use of simple Skript to make Forms
@@ -59,5 +59,5 @@ on submit custom form:
     set {_input} to input component id 0 of data "response"
 ```
 (一些语法懒得补了，自己翻吧)
-Recommendation:
- You don't need Floodgate-Skript any more
+
+*You don't need Floodgate-Skript any more*
