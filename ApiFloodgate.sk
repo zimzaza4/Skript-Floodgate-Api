@@ -1,9 +1,9 @@
-#The script depends on plugins:
-#Skript
-#Skript-Reflect
-#BEMenuAPI
-#Floodgate
-
+# The skript depends on plugins:
+# Skript
+# Skript-Reflect
+# BEMenuAPI
+# Floodgate
+# and you don't need Floodgate-Skript any more
 
 import:
     org.bukkit.Bukkit
