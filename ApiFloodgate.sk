@@ -24,6 +24,80 @@ import:
     me.zimzaza4.ModalFormClickEvent
     me.zimzaza4.CustomFormClickEvent
     
+
+on load:
+    delete {floodgateApiCache::*}
+
+on unload:
+    delete {floodgateApiCache::*}
+    
+function saveFloodgatePlayerInfo(p: player, type: string, info: string):
+    set {floodgateApiCache::%{_p}'s uuid%::%{_type}%} to {_info}
+
+on join with priority lowest:
+    set {_p} to player
+    
+    set {_fp} to FloodgateApi.getInstance().getPlayer({_p}.getUniqueId())
+    if {_fp} is set:
+        set {_locate} to {_fp}.getLanguageCode()
+        set {_device} to {_fp}.getDeviceOs().toString()
+        set {_version} to {_fp}.getVersion()
+        set {_ui} to {_fp}.getUiProfile().toString()
+        set {floodgateApiCache::%{_p}'s uuid%::bedrock} to true
+    else:
+        set {_locate} to "Java"
+        set {_version} to "Java"
+        set {_device} to "Java"
+        set {_ui} to "JAVA"
+        
+    
+    saveFloodgatePlayerInfo({_p}, "ui", {_ui})
+    saveFloodgatePlayerInfo({_p}, "locate", {_locate})
+    saveFloodgatePlayerInfo({_p}, "device", {_device})
+    saveFloodgatePlayerInfo({_p}, "version", {_version})
+    
+
+condition %player% (1¦is|2¦is(n't| not)) [from] floodgate:
+    check:
+        set {_p} to expr-1
+        if mark is 1:
+            if {floodgateApiCache::%{_p}'s uuid%::bedrock} is true:
+                continue
+        else if mark is 2:
+            if {floodgateApiCache::%{_p}'s uuid%::bedrock} isn't true:
+                continue
+                
+                
+expression [the] [bedrock] (locale|language) of [the] [floodgate] %player%:
+    return type: string
+    get:
+        set {_p} to expr-1
+        return {floodgateApiCache::%uuid of {_p}%::locate}
+        
+expression [the] [bedrock] (platform|device) of [the] [floodgate] %player%:
+    return type: string
+    get: 
+        set {_p} to expr-1
+        return {floodgateApiCache::%uuid of {_p}%::device}
+        
+expression [the] [bedrock] version of [the] [floodgate] %player%:
+    return type: string
+    get:
+        set {_p} to expr-1
+        return {floodgateApiCache::%uuid of {_p}%::version}
+        
+expression [the] [bedrock] ui [profile] of [the] [floodgate] %player%:
+    return type: string
+    get:
+        set {_p} to expr-1
+        return {floodgateApiCache::%uuid of {_p}%::ui}
+        
+ 
+on quit:
+    delete {floodgateApiCache::%player's uuid%::*}
+        
+
+
 on CustomFormClickEvent:
     set {_events::player} to event.getPlayer()
     set {_extras::form-id} to event.getFormID()
