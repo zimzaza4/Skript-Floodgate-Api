@@ -1,8 +1,7 @@
 # Skript-Floodgate-Api
 A simple Skript API
 
-Allows the use of simple Skript to make Forms
-
+Floodgate Api for Skript
 **How to install?** 
 - After confirming to install all dependent plugins, put this script into plugins/Skript/scripts/ and reload it
 
