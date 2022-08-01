@@ -2,6 +2,8 @@
 A simple Skript API
 
 Floodgate Api for Skript
+
+
 **How to install?** 
 - After confirming to install all dependent plugins, put this script into plugins/Skript/scripts/ and reload it
 
