@@ -175,6 +175,7 @@ expression [the] modal form with title %string% and button[s] %string% %string%:
         return {_F}
 
 
+
 expression [the] dropdown [component] display[s] %string% with [the] option[s] %strings%:
     return type: strings
     get: 
@@ -319,7 +320,11 @@ effect add %strings% to [form] %object%:
             set {_step} to {_a::5} parsed as number
             set {_default} to {_a::6} parsed as number
             expr-2.slider({_a::2}, {_min}, {_max}, {_step}, {_default})
-        else:
+        else if {_a::1} is "path_icon":
+            expr-2.iconPath({_a::2})
+        else if {_a::1} is "url_icon":
+            expr-2.iconUrl({_a::2})
+        else: 
             set {_s::*} to split {_a::1} by "[;;]"
             if {_s::1} is "url":
                 expr-2.button({_s::2}, Type.URL, {_s::3})
@@ -348,4 +353,12 @@ expression [the] button display %string%[ with (path icon %-string%|url icon %-s
             set {_b} to "none[;;]%expr-1%"
         return {_b}
         
-
+expression [the] (1¦path|2¦url) icon %string%:
+    return type: strings
+    get:
+        if mark is 1:
+            set {_v::1} to "path_icon"
+        else if mark is 2:
+            set {_v::1} to "url_icon"
+        set {_v::2} to expr-1
+        return {_v::*}
