@@ -62,4 +62,5 @@ on submit custom form:
 (一些语法懒得补了，自己翻吧)
 
 *You don't need Floodgate-Skript any more*
+
 *BEMenuAPI either*
