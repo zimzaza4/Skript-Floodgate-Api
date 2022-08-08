@@ -9,7 +9,7 @@ Floodgate Api for Skript
 
 
 **如何安装?**
-- 装上Skript, [Skript-Reflect](https://github.com/TPGamesNL/skript-reflect/releases), [BEMenuAPI](https://github.com/zimzaza4/Skript-Floodgate-Form/releases/tag/1.0) 插件
+- 装上Skript, [Skript-Reflect](https://github.com/TPGamesNL/skript-reflect/releases) 插件
 - 将该脚本放入该放的文件夹 plugins/Skript/scripts/
 - 启动服务器
 
@@ -17,7 +17,6 @@ Floodgate Api for Skript
 The skript depends on plugins:
 - [Skript](https://github.com/SkriptLang/Skript/releases)
 - [Skript-Reflect](https://github.com/TPGamesNL/skript-reflect/releases)
-- [BEMenuAPI](https://github.com/zimzaza4/Skript-Floodgate-Form/releases/tag/1.0)
 - [Floodgate](https://ci.opencollab.dev/job/GeyserMC/job/Floodgate/job/master/)
 
 
@@ -43,7 +42,8 @@ add content "content" to {_Form}
 ```
 Send Form:
 ```
-send-form {_Form} with id "Form_id" to {_player}
+send form {_Form} to {_player}
+send form {_Form} with id "Form_id" to {_player}
 ```
 Events:
 
@@ -62,3 +62,4 @@ on submit custom form:
 (一些语法懒得补了，自己翻吧)
 
 *You don't need Floodgate-Skript any more*
+*BEMenuAPI either*
