@@ -216,7 +216,7 @@ expression [the] slider component display[s] %string% with min[imum][ value] %nu
         set {_s::6} to "%expr-5%"
         return {_s::*}
         
-effect send[-]form %object% with id %string% to %player%:
+effect send[-| ]form %object% with id %string% to %player%:
     trigger:
         set {_F} to expr-1.build()
         if {_F}.getType() is FormType.SIMPLE_FORM:
@@ -251,7 +251,7 @@ expression slider component[ with] id %number% of [response ]%object%:
         return {_r}
     
 
-expression step slide[r] component[ with] id %number% of [response ]%object%:
+expression step slider component[ with] id %number% of [response ]%object%:
     return type: number
     get:
         set {_r} to expr-2.getStepSlide(expr-1)
