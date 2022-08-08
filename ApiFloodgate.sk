@@ -1,7 +1,6 @@
 # The skript depends on plugins:
 # Skript
 # Skript-Reflect
-# BEMenuAPI
 # Floodgate
 # and you don't need Floodgate-Skript any more
 
@@ -19,10 +18,7 @@ import:
     org.geysermc.cumulus.util.ComponentType
     org.geysermc.cumulus.util.FormImage$Type
     
-    me.zimzaza4.LForm
-    me.zimzaza4.SimpleFormClickEvent
-    me.zimzaza4.ModalFormClickEvent
-    me.zimzaza4.CustomFormClickEvent
+    java.util.function.BiConsumer
     
 
 on load:
@@ -38,7 +34,7 @@ on unload:
 function saveFloodgatePlayerInfo(p: player, type: string, info: string):
     set {floodgateApiCache::%{_p}'s uuid%::%{_type}%} to {_info}
 
-on join with priority lowest:
+on connect with priority lowest:
     set {_p} to player
     
     set {_fp} to FloodgateApi.getInstance().getPlayer({_p}.getUniqueId())
@@ -101,37 +97,14 @@ on quit:
         
 
 
-on CustomFormClickEvent:
-    set {_events::player} to event.getPlayer()
-    set {_extras::form-id} to event.getFormID()
-    set {_extras::response} to event.getResponse()
-    set {_extras::form-title} to event.getTitle()
-   
-    call custom event "submit custom form" with {_events::*} data {_extras::*}
-
-on ModalFormClickEvent: 
-    set {_events::player} to event.getPlayer()
-    set {_extras::form-id} to event.getFormId()
-    set {_extras::response} to event.getResponse()
-    set {_extras::button-id} to event.getButtonID()
-    set {_extras::button-name} to event.getButtonName()
-
-    call custom event "click button of form" with {_events::*} data {_extras::*}
-
-on SimpleFormClickEvent:  
-    set {_events::player} to event.getPlayer()
-    set {_extras::form-id} to event.getFormId()
-    set {_extras::response} to event.getResponse()
-    set {_extras::button-id} to event.getButtonID()
-    set {_extras::button-name} to event.getButtonName()
-
-    call custom event "click button of form" with {_events::*} data {_extras::*}
 
 
-expression button id of %object%:
+expression [clicked] button id of %object%:
     return type: number
     get:
-        return expr-1.getButtonID()
+        return expr-1.getClickedButtonId()
+        
+
 
 
 expression form id of [response ]%object%:
@@ -216,18 +189,8 @@ expression [the] slider component display[s] %string% with min[imum][ value] %nu
         set {_s::6} to "%expr-5%"
         return {_s::*}
         
-effect send[-| ]form %object% with id %string% to %player%:
-    trigger:
-        set {_F} to expr-1.build()
-        if {_F}.getType() is FormType.SIMPLE_FORM:
-            set {_F} to LForm.SimpleListener(expr-3, expr-1, expr-2)
-        else if {_F}.getType() is FormType.MODAL_FORM:
-            set {_F} to LForm.ModalListener(expr-3, expr-1, expr-2)
-        else if {_F}.getType() is FormType.CUSTOM_FORM:
-            set {_F} to LForm.CustomListener(expr-3, expr-1, expr-2)
 
-        set {_fp} to FloodgateApi.getInstance().getPlayer(expr-3.getUniqueId())
-        {_fp}.sendForm({_F})
+
 
 
 expression input component[ with] id %number% of [response ]%object%:
@@ -362,3 +325,92 @@ expression [the] (1¦path|2¦url) icon %string%:
             set {_v::1} to "url_icon"
         set {_v::2} to expr-1
         return {_v::*}
+
+effect send[-| ]form %object%[ with id %-string%] to %player%:
+    trigger:
+        set {_F} to expr-1.build()
+        
+        if expr-2 is set:
+            if {_F}.getType() is FormType.SIMPLE_FORM:
+                setListenerOnForm(expr-3, expr-1, expr-2, 1)
+            else if {_F}.getType() is FormType.MODAL_FORM:
+                setListenerOnForm(expr-3, expr-1, expr-2, 2)
+            else if {_F}.getType() is FormType.CUSTOM_FORM:
+                setListenerOnForm(expr-3, expr-1, expr-2, 3)
+
+        set {_fp} to FloodgateApi.getInstance().getPlayer(expr-3.getUniqueId())
+        {_fp}.sendForm({_F})
+        
+expression parse response %string% by [form] %object%:
+    return type: object
+    get:
+        return expr-2.parseResponse(expr-1)
+        
+condition response %object% (1¦is|2¦is(n't| not)) closed:
+    check:
+        if mark is 1:
+            if expr-1.isClosed() is true:
+                continue
+        else if mark is 2:
+            if expr-1.isClosed() is false:
+                continue
+        
+condition response %object% (1¦is|2¦is(n't| not)) correct:
+    check:
+        if mark is 1:
+            if expr-1.isCorrect() is true:
+                continue
+        else if mark is 2:
+            if expr-1.isCorrect() is false:
+                continue
+
+expression response handler of %object%:
+    set:
+        expr-1.responseHandler(change value)
+
+expression section handler %section%:
+    return type: object
+    get:
+        set {_functions::accept} to expr-1
+        return new proxy instance of BiConsumer using {_functions::*}
+
+expression function handler %text%:
+    return type: object
+    get:
+        set {_functions::accept} to function reference expr-1
+        return new proxy instance of BiConsumer using {_functions::*}
+    
+    
+        
+        
+function setListenerOnForm(p: player, builder: object, id: text, type: number):
+
+    create section with {_proxy}, {_form}, {_data} stored in {_functions::accept}:
+        set {_r} to parse response {_data} by {_form}
+        
+        set {_events::player} to {_p}
+        set {_extras::form-id} to {_id}
+        set {_extras::response} to {_r}
+        
+        # simple
+        if {_type} is 1:
+            set {_extras::form-title} to {_form}.getTitle()
+            set {_extras::button-id} to {_r}.getClickedButtonId()
+            set {_extras::button-name} to {_r}.getClickedButton().getText()
+            call custom event "click button of form" with {_events::*} data {_extras::*}
+
+        # modal
+        else if {_type} is 2:       
+            set {_extras::button-id} to {_r}.getClickedButtonId()
+            set {_extras::button-name} to {_r}.getClickedButtonText()
+            call custom event "click button of form" with {_events::*} data {_extras::*}
+
+        # custom
+        else:
+            set {_extras::form-title} to {_form}.getTitle()
+            call custom event "submit custom form" with {_events::*} data {_extras::*}
+        
+    set {_proxy} to new proxy instance of BiConsumer using {_functions::*}
+    {_builder}.responseHandler({_proxy})
+    
+
