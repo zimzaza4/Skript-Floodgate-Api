@@ -1,5 +1,4 @@
 # Skript-Floodgate-Api
-A simple Skript API
 
 Floodgate Api for Skript
 
@@ -30,14 +29,11 @@ set {_Form} to modal form with title "hello" and buttons "button1" "button2"
 set {_Form} to custom form with title "hello"
 ```
 
-Add button to a Simple Form:
+Add something to a Simple Form:
 ```
 add button display "button" to form {_simpleform}
 add button display "button with url image" with url icon "url" to form {_simpleform}
 add button display "button with path image" with path icon "path" to form {_simpleform}
-```
-content
-```
 add content "content" to {_Form}
 ```
 Send Form:
@@ -59,8 +55,6 @@ on submit custom form:
     set {_id} to data "form-id"
     set {_input} to input component id 0 of data "response"
 ```
-(一些语法懒得补了，自己翻吧)
 
 *You don't need Floodgate-Skript any more*
 
-*BEMenuAPI either*
