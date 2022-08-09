@@ -178,7 +178,7 @@ expression [the] input [component] display[s] %string% with placeholder %string%
         set {_s::4} to expr-3
         return {_s::*}
 
-expression [the] slider component display[s] %string% with min[imum][ value] %number%(,| ,|, )max[imum][ value] %number%(,| ,|, )step %number%(,| ,|, )default [value ]%number%:
+expression [the] slider component display[s] %string% with min[imum] [value] %number%(,| ,|, )max[imum] [value] %number%(,| ,|, )step %number%(,| ,|, )default [value] %number%:
     return type: strings
     get:
         set {_s::1} to "slider"
@@ -193,49 +193,49 @@ expression [the] slider component display[s] %string% with min[imum][ value] %nu
 
 
 
-expression input component[ with] id %number% of [response ]%object%:
+expression input component [with] id %number% of [response ]%object%:
     return type: string
     get:
         set {_r} to expr-2.getInput(expr-1)
         return {_r}
 
 
-expression toggle component[ with] id %number% of [response ]%object%:
+expression toggle component [with] id %number% of [response] %object%:
     return type: boolean
     get:
         set {_r} to expr-2.getToggle(expr-1)
         return {_r}
 
 
-expression slider component[ with] id %number% of [response ]%object%:
+expression slider component [with] id %number% of [response] %object%:
     return type: number
     get:
         set {_r} to expr-2.getSlider(expr-1)
         return {_r}
     
 
-expression step slider component[ with] id %number% of [response ]%object%:
+expression step slider component [with] id %number% of [response] %object%:
     return type: number
     get:
         set {_r} to expr-2.getStepSlide(expr-1)
         return {_r}
 
 
-expression dropdown component[ with] id %number% of [response ]%object%:
+expression dropdown component [with] id %number% of [response] %object%:
     return type: number
     get:
         set {_r} to expr-2.getDropdown(expr-1)
         return {_r}
 
 
-expression form title of [response ]%object%:
+expression form title of [response] %object%:
     return type: string
     get:
         set {_r} to expr-1.getTitle()
         return {_r}
 
 
-expression component[ with] id %number% of [response ]%object%:
+expression component [with] id %number% of [response] %object%:
     return type: string
     get:
         set {_t} to expr-2.getComponentTypes().toString().replaceAll("[\[\]]", "").split(",")
