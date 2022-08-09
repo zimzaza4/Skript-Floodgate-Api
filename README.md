@@ -55,6 +55,3 @@ on submit custom form:
     set {_id} to data "form-id"
     set {_input} to input component id 0 of data "response"
 ```
-
-*You don't need Floodgate-Skript any more*
-
