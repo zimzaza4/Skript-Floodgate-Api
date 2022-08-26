@@ -190,7 +190,15 @@ expression [the] slider component display[s] %string% with min[imum] [value] %nu
         return {_s::*}
         
 
-
+expression [the] step slider display[s] %string% default step %number% with steps %strings%:
+    return type: objects
+    get:
+        set {_steps::*} to expr-3
+        set {_s::1} to "step_slider"
+        set {_s::2} to expr-1
+        set {_s::3} to expr-2
+        set {_s::4} to join {_steps::*} by "[;;]"
+        return {_s::*}
 
 
 expression input component [with] id %number% of [response ]%object%:
@@ -214,7 +222,7 @@ expression slider component [with] id %number% of [response] %object%:
         return {_r}
     
 
-expression step slide component [with] id %number% of [response] %object%:
+expression step slide[r] component [with] id %number% of [response] %object%:
     return type: number
     get:
         set {_r} to expr-2.getStepSlide(expr-1)
@@ -263,7 +271,7 @@ expression component [with] id %number% of [response] %object%:
         return "%{_r}%"
 
 
-effect add %strings% to [form] %object%:
+effect add %objects% to [form] %object%:
     trigger:
         set {_a::*} to expr-1
         if {_a::1} is "dropdown":
@@ -283,6 +291,9 @@ effect add %strings% to [form] %object%:
             set {_step} to {_a::5} parsed as number
             set {_default} to {_a::6} parsed as number
             expr-2.slider({_a::2}, {_min}, {_max}, {_step}, {_default})
+        else if {_a::1} is "step_slider":
+            set {_steps::*} to {_a::4} split by "[;;]"
+            expr-2.stepSlider({_a::2}, {_a::3}, [{_steps::*} as String])
         else if {_a::1} is "path_icon":
             expr-2.iconPath({_a::2})
         else if {_a::1} is "url_icon":
