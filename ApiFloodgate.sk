@@ -417,7 +417,8 @@ function setListenerOnForm(p: player, builder: object, id: text, type: number):
             call custom event "click button of form" with {_events::*} data {_extras::*}
 
         # custom
-        else:
+        else if response {_r} isn't closed:
+
             set {_extras::form-title} to {_form}.getTitle()
             call custom event "submit custom form" with {_events::*} data {_extras::*}
         
