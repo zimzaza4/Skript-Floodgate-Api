@@ -214,7 +214,7 @@ expression slider component [with] id %number% of [response] %object%:
         return {_r}
     
 
-expression step slider component [with] id %number% of [response] %object%:
+expression step slide component [with] id %number% of [response] %object%:
     return type: number
     get:
         set {_r} to expr-2.getStepSlide(expr-1)
