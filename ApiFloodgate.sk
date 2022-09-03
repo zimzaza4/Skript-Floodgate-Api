@@ -308,6 +308,8 @@ effect add %objects% to [form] %object%:
                 expr-2.button({_s::2})
             else if {_s::1} is "content":
                 expr-2.content({_s::2})
+            else if {_s::1} is "label":
+                expr-2.label({_s::2})
 
 
 
@@ -327,6 +329,12 @@ expression [the] button display %string%[ with (path icon %-string%|url icon %-s
             set {_b} to "none[;;]%expr-1%"
         return {_b}
         
+expression [the] label %string%:
+    return type: string
+    get:
+        set {_r} to "label[;;]%expr-1%"
+        return {_r}
+
 expression [the] (1¦path|2¦url) icon %string%:
     return type: strings
     get:
