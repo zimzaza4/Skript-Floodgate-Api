@@ -357,8 +357,9 @@ effect send[-| ]form %object%[ with id %-string%] to %player%:
             else if {_F}.getType() is FormType.CUSTOM_FORM:
                 setListenerOnForm(expr-3, expr-1, expr-2, 3)
 
-        set {_fp} to FloodgateApi.getInstance().getPlayer(expr-3.getUniqueId())
-        {_fp}.sendForm({_F})
+              
+        FloodgateApi.getInstance().sendForm(expr-3.getUniqueId(), {_F})
+        
         
 expression parse response %string% by [form] %object%:
     return type: object
