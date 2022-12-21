@@ -356,8 +356,6 @@ effect send[-| ]form %object%[ with id %-string%] to %player%:
                 setListenerOnForm(expr-3, expr-1, expr-2, 2)
             else if {_F}.getType() is FormType.CUSTOM_FORM:
                 setListenerOnForm(expr-3, expr-1, expr-2, 3)
-
-              
         FloodgateApi.getInstance().sendForm(expr-3.getUniqueId(), {_F})
         
         
