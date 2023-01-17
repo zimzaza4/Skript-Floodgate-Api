@@ -324,7 +324,7 @@ expression [the] button display %string%[ with (path icon %-string%|url icon %-s
         if expr-2 is set:
             set {_b} to "path[;;]%expr-1%[;;]%expr-2%"
         else if expr-3 is set:
-            set {_b} to "url[;;]%expr-1%[;;]%expr-2%"
+            set {_b} to "url[;;]%expr-1%[;;]%expr-3%"
         else:
             set {_b} to "none[;;]%expr-1%"
         return {_b}
