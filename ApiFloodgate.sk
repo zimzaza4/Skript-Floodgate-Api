@@ -348,14 +348,16 @@ expression [the] (1¦path|2¦url) icon %string%:
 effect send[-| ]form %object%[ with id %-string%] to %player%:
     trigger:
         set {_F} to expr-1.build()
-        
+        set {_p} to expr-3
+        set {_b} to expr-1
+        set {_id} to expr-2
         if expr-2 is set:
             if {_F}.getType() is FormType.SIMPLE_FORM:
-                setListenerOnForm(expr-3, expr-1, expr-2, 1)
+                setListenerOnForm({_p}, {_b}, {_id}, 1)
             else if {_F}.getType() is FormType.MODAL_FORM:
-                setListenerOnForm(expr-3, expr-1, expr-2, 2)
+                setListenerOnForm({_p}, {_b}, {_id}, 2)
             else if {_F}.getType() is FormType.CUSTOM_FORM:
-                setListenerOnForm(expr-3, expr-1, expr-2, 3)
+                setListenerOnForm({_p}, {_b}, {_id}, 3)
         FloodgateApi.getInstance().sendForm(expr-3.getUniqueId(), {_F})
         
         
@@ -401,7 +403,7 @@ expression function handler %text%:
     
         
         
-function setListenerOnForm(p: player, builder: object, id: text, type: number):
+local function setListenerOnForm(p: player, builder: object, id: text, type: number):
 
     create section with {_proxy}, {_form}, {_data} stored in {_functions::accept}:
         set {_r} to parse response {_data} by {_form}
@@ -432,4 +434,3 @@ function setListenerOnForm(p: player, builder: object, id: text, type: number):
     set {_proxy} to new proxy instance of BiConsumer using {_functions::*}
     {_builder}.responseHandler({_proxy})
     
-
