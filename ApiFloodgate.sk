@@ -26,20 +26,9 @@ on load:
     set {_floodgate_skript} to Bukkit.getPluginManager().getPlugin("Floodgate-Skript")
     if {_floodgate_skript} is set:
         send "&cYou don't need Floodgate-Skript any more" to console
+    
+    create section with {_builder}, {_id}, {_type}, {_p} stored in {FloodgateAPIListenerRegister}:
         
-    
-on unload:
-    delete {floodgateApiCache::*}
-    
-function saveFloodgatePlayerInfo(p: player, type: string, info: string):
-    set {floodgateApiCache::%{_p}'s uuid%::%{_type}%} to {_info}
-
-effect register listener on form %object% id %text% type %number% for %player%:
-    trigger:
-        set {_builder} to expr-1
-        set {_id} to expr-2
-        set {_type} to expr-3
-        set {_p} to expr-4
         create section with {_proxy}, {_form}, {_data} stored in {_functions::accept}:
             set {_r} to parse response {_data} by {_form}
         
@@ -69,6 +58,15 @@ effect register listener on form %object% id %text% type %number% for %player%:
         set {_proxy} to new proxy instance of BiConsumer using {_functions::*}
         {_builder}.responseHandler({_proxy})
     
+    
+on unload:
+    delete {floodgateApiCache::*}
+    
+function saveFloodgatePlayerInfo(p: player, type: string, info: string):
+    set {floodgateApiCache::%{_p}'s uuid%::%{_type}%} to {_info}
+
+    
+        
 
 on connect with priority lowest:
     set {_p} to player
@@ -389,11 +387,11 @@ effect send[-| ]form %object%[ with id %-string%] to %player%:
         set {_id} to expr-2
         if expr-2 is set:
             if {_F}.getType() is FormType.SIMPLE_FORM:
-                register listener on form {_b} id {_id} type 1 for {_p}
+                run section {FloodgateAPIListenerRegister} with arguments {_b}, {_id}, 1, {_p}
             else if {_F}.getType() is FormType.MODAL_FORM:
-                register listener on form {_b} id {_id} type 2 for {_p}
+                run section {FloodgateAPIListenerRegister} with arguments {_b}, {_id}, 2, {_p}
             else if {_F}.getType() is FormType.CUSTOM_FORM:
-                register listener on form {_b} id {_id} type 3 for {_p}
+                run section {FloodgateAPIListenerRegister} with arguments {_b}, {_id}, 3, {_p}
         FloodgateApi.getInstance().sendForm(expr-3.getUniqueId(), {_F})
         
         
@@ -438,5 +436,4 @@ expression function handler %text%:
     
     
         
-
 
