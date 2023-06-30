@@ -34,6 +34,42 @@ on unload:
 function saveFloodgatePlayerInfo(p: player, type: string, info: string):
     set {floodgateApiCache::%{_p}'s uuid%::%{_type}%} to {_info}
 
+effect register listener on form %object% id %text% type %number% for %player%:
+    trigger:
+        set {_builder} to expr-1
+        set {_id} to expr-2
+        set {_type} to expr-3
+        set {_p} to expr-4
+        create section with {_proxy}, {_form}, {_data} stored in {_functions::accept}:
+            set {_r} to parse response {_data} by {_form}
+        
+            set {_events::player} to {_p}
+            set {_extras::form-id} to {_id}
+            set {_extras::response} to {_r}
+        
+        # simple
+            if {_type} is 1:
+                set {_extras::form-title} to {_form}.getTitle()
+                set {_extras::button-id} to {_r}.getClickedButtonId()
+                set {_extras::button-name} to {_r}.getClickedButton().getText()
+                call custom event "click button of form" with {_events::*} data {_extras::*}
+
+        # modal
+            else if {_type} is 2:       
+                set {_extras::button-id} to {_r}.getClickedButtonId()
+                set {_extras::button-name} to {_r}.getClickedButtonText()
+                call custom event "click button of form" with {_events::*} data {_extras::*}
+
+        # custom
+            else if response {_r} isn't closed:
+
+                set {_extras::form-title} to {_form}.getTitle()
+                call custom event "submit custom form" with {_events::*} data {_extras::*}
+        
+        set {_proxy} to new proxy instance of BiConsumer using {_functions::*}
+        {_builder}.responseHandler({_proxy})
+    
+
 on connect with priority lowest:
     set {_p} to player
     
@@ -403,38 +439,4 @@ expression function handler %text%:
     
         
 
-effect register listener on form %object% id %text% type %number% for %player%:
-    trigger:
-        set {_builder} to expr-1
-        set {_id} to expr-2
-        set {_type} to expr-3
-        set {_p} to expr-4
-        create section with {_proxy}, {_form}, {_data} stored in {_functions::accept}:
-            set {_r} to parse response {_data} by {_form}
-        
-            set {_events::player} to {_p}
-            set {_extras::form-id} to {_id}
-            set {_extras::response} to {_r}
-        
-        # simple
-            if {_type} is 1:
-                set {_extras::form-title} to {_form}.getTitle()
-                set {_extras::button-id} to {_r}.getClickedButtonId()
-                set {_extras::button-name} to {_r}.getClickedButton().getText()
-                call custom event "click button of form" with {_events::*} data {_extras::*}
 
-        # modal
-            else if {_type} is 2:       
-                set {_extras::button-id} to {_r}.getClickedButtonId()
-                set {_extras::button-name} to {_r}.getClickedButtonText()
-                call custom event "click button of form" with {_events::*} data {_extras::*}
-
-        # custom
-            else if response {_r} isn't closed:
-
-                set {_extras::form-title} to {_form}.getTitle()
-                call custom event "submit custom form" with {_events::*} data {_extras::*}
-        
-        set {_proxy} to new proxy instance of BiConsumer using {_functions::*}
-        {_builder}.responseHandler({_proxy})
-    
