@@ -399,6 +399,13 @@ expression function handler %text%:
         return new proxy instance of BiConsumer using {_functions::*}
     
     
+    
+effect [send] transfer %player% to address %string% and port %number%:
+    trigger:
+        set {_uuid} to expr-1.getUniqueId()
+        set {_address} to expr-2
+        set {_port} to expr-3
+        FloodgateApi.getInstance().transferPlayer({_uuid}, {_address}, {_port})
         
         
 function setListenerOnForm(p: player, builder: object, id: text, type: number):
@@ -431,5 +438,6 @@ function setListenerOnForm(p: player, builder: object, id: text, type: number):
         
     set {_proxy} to new proxy instance of BiConsumer using {_functions::*}
     {_builder}.responseHandler({_proxy})
-    
+
+
 
