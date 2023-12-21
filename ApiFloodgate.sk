@@ -9,13 +9,11 @@ import:
     org.bukkit.entity.Player
 
     org.geysermc.floodgate.api.FloodgateApi
-    org.geysermc.cumulus.SimpleForm
-    org.geysermc.cumulus.ModalForm
-    org.geysermc.cumulus.CustomForm
-    org.geysermc.cumulus.util.FormBuilder
+    org.geysermc.cumulus.form.SimpleForm
+    org.geysermc.cumulus.form.ModalForm
+    org.geysermc.cumulus.form.CustomForm
+    org.geysermc.cumulus.form.util.FormBuilder
     org.geysermc.cumulus.util.FormImage
-    org.geysermc.cumulus.util.FormType
-    org.geysermc.cumulus.util.ComponentType
     org.geysermc.cumulus.util.FormImage$Type
     
     java.util.function.BiConsumer
@@ -102,19 +100,12 @@ on quit:
 expression [clicked] button id of %object%:
     return type: number
     get:
-        return expr-1.getClickedButtonId()
+        return expr-1.clickedButtonId()
         
 
 
 
-expression form id of [response ]%object%:
-    return type: string
-    get:
-        if expr-1.getFormId() is not null:
-            set {_id} to expr-1.getFormId()
-        else if expr-1.getFormID() is not null:
-            set {_id} to expr-1.getFormID()
-        return {_id}
+
 
 
 custom event "submit custom form":
@@ -178,7 +169,7 @@ expression [the] input [component] display[s] %string% with placeholder %string%
         set {_s::4} to expr-3
         return {_s::*}
 
-expression [the] slider component display[s] %string% with min[imum][ value] %number%(,| ,|, )max[imum][ value] %number%(,| ,|, )step %number%(,| ,|, )default [value ]%number%:
+expression [the] slider component display[s] %string% with min[imum] [value] %number%(,| ,|, )max[imum] [value] %number%(,| ,|, )step %number%(,| ,|, )default [value] %number%:
     return type: strings
     get:
         set {_s::1} to "slider"
@@ -190,80 +181,67 @@ expression [the] slider component display[s] %string% with min[imum][ value] %nu
         return {_s::*}
         
 
+expression [the] step slider display[s] %string% default step %number% with steps %strings%:
+    return type: objects
+    get:
+        set {_steps::*} to expr-3
+        set {_s::1} to "step_slider"
+        set {_s::2} to expr-1
+        set {_s::3} to expr-2
+        set {_s::4} to join {_steps::*} by "[;;]"
+        return {_s::*}
 
 
-
-expression input component[ with] id %number% of [response ]%object%:
+expression input component [with] id %number% of [response ]%object%:
     return type: string
     get:
-        set {_r} to expr-2.getInput(expr-1)
+        set {_r} to expr-2.asInput(expr-1)
         return {_r}
 
 
-expression toggle component[ with] id %number% of [response ]%object%:
+expression toggle component [with] id %number% of [response] %object%:
     return type: boolean
     get:
-        set {_r} to expr-2.getToggle(expr-1)
+        set {_r} to expr-2.asToggle(expr-1)
         return {_r}
 
 
-expression slider component[ with] id %number% of [response ]%object%:
+expression slider component [with] id %number% of [response] %object%:
     return type: number
     get:
-        set {_r} to expr-2.getSlider(expr-1)
+        set {_r} to expr-2.asSlider(expr-1)
         return {_r}
     
 
-expression step slider component[ with] id %number% of [response ]%object%:
+expression step slide[r] component [with] id %number% of [response] %object%:
     return type: number
     get:
-        set {_r} to expr-2.getStepSlide(expr-1)
+        set {_r} to expr-2.asStepSlider(expr-1)
         return {_r}
 
 
-expression dropdown component[ with] id %number% of [response ]%object%:
+expression dropdown component [with] id %number% of [response] %object%:
     return type: number
     get:
-        set {_r} to expr-2.getDropdown(expr-1)
+        set {_r} to expr-2.asDropdown(expr-1)
         return {_r}
 
 
-expression form title of [response ]%object%:
+expression form title of [response] %object%:
     return type: string
     get:
-        set {_r} to expr-1.getTitle()
+        set {_r} to expr-1.title()
         return {_r}
 
 
-expression component[ with] id %number% of [response ]%object%:
-    return type: string
+expression component [with] id %number% of [response] %object%:
+    return type: object
     get:
-        set {_t} to expr-2.getComponentTypes().toString().replaceAll("[\[\]]", "").split(",")
-        set {_t} to {_t}[expr-1]
-        if {_t} is "SLIDER":
-
-            set {_r} to expr-2.getSlider(expr-1)
         
-        else if {_t} is "STEP_SLIDER":
-
-            set {_r} to expr-2.getStepSlide(expr-1)
-
-        else if {t} is "TOGGLE":
-            
-            set {_r} to expr-2.getToggle(expr-1)
-            
-        else if {_t} is "DROPDOWN":
-
-            set {_r} to expr-2.getDropdown(expr-1)
-        
-        else if {_t} is "INPUT":
-
-            set {_r} to expr-2.getInput(expr-1)
-                
-        return "%{_r}%"
+        return expr-2.valueAt(expr-1)
 
 
-effect add %strings% to [form] %object%:
+effect add %objects% to [form] %object%:
     trigger:
         set {_a::*} to expr-1
         if {_a::1} is "dropdown":
@@ -283,6 +261,9 @@ effect add %strings% to [form] %object%:
             set {_step} to {_a::5} parsed as number
             set {_default} to {_a::6} parsed as number
             expr-2.slider({_a::2}, {_min}, {_max}, {_step}, {_default})
+        else if {_a::1} is "step_slider":
+            set {_steps::*} to {_a::4} split by "[;;]"
+            expr-2.stepSlider({_a::2}, {_a::3}, [{_steps::*} as String])
         else if {_a::1} is "path_icon":
             expr-2.iconPath({_a::2})
         else if {_a::1} is "url_icon":
@@ -297,6 +278,8 @@ effect add %strings% to [form] %object%:
                 expr-2.button({_s::2})
             else if {_s::1} is "content":
                 expr-2.content({_s::2})
+            else if {_s::1} is "label":
+                expr-2.label({_s::2})
 
 
 
@@ -311,11 +294,17 @@ expression [the] button display %string%[ with (path icon %-string%|url icon %-s
         if expr-2 is set:
             set {_b} to "path[;;]%expr-1%[;;]%expr-2%"
         else if expr-3 is set:
-            set {_b} to "url[;;]%expr-1%[;;]%expr-2%"
+            set {_b} to "url[;;]%expr-1%[;;]%expr-3%"
         else:
             set {_b} to "none[;;]%expr-1%"
         return {_b}
         
+expression [the] label %string%:
+    return type: string
+    get:
+        set {_r} to "label[;;]%expr-1%"
+        return {_r}
+
 expression [the] (1¦path|2¦url) icon %string%:
     return type: strings
     get:
@@ -331,15 +320,14 @@ effect send[-| ]form %object%[ with id %-string%] to %player%:
         set {_F} to expr-1.build()
         
         if expr-2 is set:
-            if {_F}.getType() is FormType.SIMPLE_FORM:
+            if {_F} is instance of SimpleForm:
                 setListenerOnForm(expr-3, expr-1, expr-2, 1)
-            else if {_F}.getType() is FormType.MODAL_FORM:
+            else if {_F} is instance of ModalForm:
                 setListenerOnForm(expr-3, expr-1, expr-2, 2)
-            else if {_F}.getType() is FormType.CUSTOM_FORM:
+            else if {_F} is instance of CustomForm:
                 setListenerOnForm(expr-3, expr-1, expr-2, 3)
-
-        set {_fp} to FloodgateApi.getInstance().getPlayer(expr-3.getUniqueId())
-        {_fp}.sendForm({_F})
+        FloodgateApi.getInstance().getPlayer(expr-3.getUniqueId()).sendForm({_F})
+        
         
 expression parse response %string% by [form] %object%:
     return type: object
@@ -381,12 +369,19 @@ expression function handler %text%:
         return new proxy instance of BiConsumer using {_functions::*}
     
     
+    
+effect [send] transfer %player% to address %string% and port %number%:
+    trigger:
+        set {_uuid} to expr-1.getUniqueId()
+        set {_address} to expr-2
+        set {_port} to expr-3
+        FloodgateApi.getInstance().transferPlayer({_uuid}, {_address}, {_port})
         
         
 function setListenerOnForm(p: player, builder: object, id: text, type: number):
 
-    create section with {_proxy}, {_form}, {_data} stored in {_functions::accept}:
-        set {_r} to parse response {_data} by {_form}
+    create section with {_proxy}, {_form}, {_r} stored in {_functions::accept}:
+        
         
         set {_events::player} to {_p}
         set {_extras::form-id} to {_id}
@@ -394,23 +389,25 @@ function setListenerOnForm(p: player, builder: object, id: text, type: number):
         
         # simple
         if {_type} is 1:
-            set {_extras::form-title} to {_form}.getTitle()
-            set {_extras::button-id} to {_r}.getClickedButtonId()
-            set {_extras::button-name} to {_r}.getClickedButton().getText()
+            set {_extras::form-title} to {_form}.title()
+            set {_extras::button-id} to {_r}.clickedButtonId()
+            set {_extras::button-name} to {_r}.clickedButton().text()
             call custom event "click button of form" with {_events::*} data {_extras::*}
 
         # modal
         else if {_type} is 2:       
-            set {_extras::button-id} to {_r}.getClickedButtonId()
+            set {_extras::button-id} to {_r}.clickedButtonId()
             set {_extras::button-name} to {_r}.getClickedButtonText()
             call custom event "click button of form" with {_events::*} data {_extras::*}
 
         # custom
         else:
-            set {_extras::form-title} to {_form}.getTitle()
+
+            set {_extras::form-title} to {_form}.title()
             call custom event "submit custom form" with {_events::*} data {_extras::*}
         
     set {_proxy} to new proxy instance of BiConsumer using {_functions::*}
-    {_builder}.responseHandler({_proxy})
-    
+    {_builder}.validResultHandler({_proxy})
+
+
 
