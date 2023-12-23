@@ -24,7 +24,8 @@ on load:
     set {_floodgate_skript} to Bukkit.getPluginManager().getPlugin("Floodgate-Skript")
     if {_floodgate_skript} is set:
         send "&cYou don't need Floodgate-Skript any more" to console
-        
+    loop all players:
+        setFloodgateData(loop-player)
     
 on unload:
     delete {floodgateApiCache::*}
@@ -34,7 +35,9 @@ function saveFloodgatePlayerInfo(p: player, type: string, info: string):
 
 on connect with priority lowest:
     set {_p} to player
-    
+    setFloodgateData({_p})
+
+function setFloodgateData(p: player):
     set {_fp} to FloodgateApi.getInstance().getPlayer({_p}.getUniqueId())
     if {_fp} is set:
         set {_locate} to {_fp}.getLanguageCode()
@@ -328,33 +331,16 @@ effect send[-| ]form %object%[ with id %-string%] to %player%:
                 setListenerOnForm(expr-3, expr-1, expr-2, 3)
         FloodgateApi.getInstance().getPlayer(expr-3.getUniqueId()).sendForm({_F})
         
-        
-expression parse response %string% by [form] %object%:
-    return type: object
-    get:
-        return expr-2.parseResponse(expr-1)
-        
-condition response %object% (1¦is|2¦is(n't| not)) closed:
-    check:
-        if mark is 1:
-            if expr-1.isClosed() is true:
-                continue
-        else if mark is 2:
-            if expr-1.isClosed() is false:
-                continue
-        
-condition response %object% (1¦is|2¦is(n't| not)) correct:
-    check:
-        if mark is 1:
-            if expr-1.isCorrect() is true:
-                continue
-        else if mark is 2:
-            if expr-1.isCorrect() is false:
-                continue
 
-expression response handler of %object%:
+
+expression (1¦valid|2¦invaild|3¦closed) result handler of %object%:
     set:
-        expr-1.responseHandler(change value)
+        if mark is 1:
+            expr-1.validResultHandler(change value)
+        else if mark is 2:
+            expr-1.closedOrInvalidResultHandler(change value)
+        else:
+            expr-1.closedResultHandler(change value)
 
 expression section handler %section%:
     return type: object
@@ -408,6 +394,5 @@ function setListenerOnForm(p: player, builder: object, id: text, type: number):
         
     set {_proxy} to new proxy instance of BiConsumer using {_functions::*}
     {_builder}.validResultHandler({_proxy})
-
 
 
