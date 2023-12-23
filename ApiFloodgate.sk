@@ -17,6 +17,7 @@ import:
     org.geysermc.cumulus.util.FormImage$Type
     
     java.util.function.BiConsumer
+    java.util.function.Consumer
     
 
 on load:
@@ -106,9 +107,9 @@ expression [clicked] button id of %object%:
         return expr-1.clickedButtonId()
         
 
-
-
-
+custom event "close form":
+    pattern: form close
+    event-values: player
 
 
 custom event "submit custom form":
@@ -366,7 +367,7 @@ effect [send] transfer %player% to address %string% and port %number%:
         
 function setListenerOnForm(p: player, builder: object, id: text, type: number):
 
-    create section with {_proxy}, {_form}, {_r} stored in {_functions::accept}:
+    create section with {_proxy}, {_form}, {_r} stored in {_handler::accept}:
         
         
         set {_events::player} to {_p}
@@ -392,7 +393,17 @@ function setListenerOnForm(p: player, builder: object, id: text, type: number):
             set {_extras::form-title} to {_form}.title()
             call custom event "submit custom form" with {_events::*} data {_extras::*}
         
-    set {_proxy} to new proxy instance of BiConsumer using {_functions::*}
+    set {_proxy} to new proxy instance of BiConsumer using {_handler::*}
     {_builder}.validResultHandler({_proxy})
-
+    create section with {_proxy}, {_form} stored in {_handler::accept}:
+        
+        
+        set {_events::player} to {_p}
+        set {_extras::form-id} to {_id}
+        set {_extras::form} to {_form}
+        
+        call custom event "close form" with {_events::*} data {_extras::*}
+        
+    set {_proxy} to new proxy instance of Consumer using {_handler::*}
+    {_builder}.closedResultHandler({_proxy})
 
