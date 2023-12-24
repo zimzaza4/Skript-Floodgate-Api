@@ -64,12 +64,21 @@ effect send[-| ]dialogue %object%[ with id %-string%] to %player%:
 custom event "click button of dialogue":
     pattern: click dialogue button
     event-values: player
+
+custom event "close dialogue":
+    pattern: dialogue close
+    event-values: player
     
 effect add %objects% to [dialogue] %object%:
     trigger:
         set {_a::*} to expr-1
         loop {_a::*}:
             expr-2.buttons().add(loop-value)
+            
+effect close dialogue of %player%
+    trigger:
+        NpcDialogueForm.closeForm(FloodgateApi.getInstance().getPlayer(expr-1.getUniqueId()))
+            
 function setListenerOnDialogue(f: object, fid: string, p: player):
     create section with {_proxy}, {_form}, {_bid} stored in {_handler::accept}:
         
@@ -82,5 +91,17 @@ function setListenerOnDialogue(f: object, fid: string, p: player):
     set {_proxy} to new proxy instance of BiConsumer using {_handler::*}
 
     {_f}.handler({_proxy})
+    
+    create section with {_proxy}, {_form} stored in {_handler::accept}:
+        
+        set {_events::player} to {_p}
+        set {_extras::form-id} to {_fid}
+     
+        call custom event "close dialogue" with {_events::*} data {_extras::*}
+        
+        
+    set {_proxy} to new proxy instance of Consumer using {_handler::*}
+
+    {_f}.closeHandler({_proxy})
     
 
