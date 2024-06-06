@@ -9,16 +9,15 @@ import:
     org.bukkit.entity.Player
 
     org.geysermc.floodgate.api.FloodgateApi
-    org.geysermc.cumulus.SimpleForm
-    org.geysermc.cumulus.ModalForm
-    org.geysermc.cumulus.CustomForm
-    org.geysermc.cumulus.util.FormBuilder
+    org.geysermc.cumulus.form.SimpleForm
+    org.geysermc.cumulus.form.ModalForm
+    org.geysermc.cumulus.form.CustomForm
+    org.geysermc.cumulus.form.util.FormBuilder
     org.geysermc.cumulus.util.FormImage
-    org.geysermc.cumulus.util.FormType
-    org.geysermc.cumulus.util.ComponentType
     org.geysermc.cumulus.util.FormImage$Type
     
     java.util.function.BiConsumer
+    java.util.function.Consumer
     
 
 on load:
@@ -26,7 +25,8 @@ on load:
     set {_floodgate_skript} to Bukkit.getPluginManager().getPlugin("Floodgate-Skript")
     if {_floodgate_skript} is set:
         send "&cYou don't need Floodgate-Skript any more" to console
-        
+    loop all players:
+        setFloodgateData(loop-player)
     
 on unload:
     delete {floodgateApiCache::*}
@@ -36,7 +36,9 @@ function saveFloodgatePlayerInfo(p: player, type: string, info: string):
 
 on connect with priority lowest:
     set {_p} to player
-    
+    setFloodgateData({_p})
+
+function setFloodgateData(p: player):
     set {_fp} to FloodgateApi.getInstance().getPlayer({_p}.getUniqueId())
     if {_fp} is set:
         set {_locate} to {_fp}.getLanguageCode()
@@ -102,19 +104,12 @@ on quit:
 expression [clicked] button id of %object%:
     return type: number
     get:
-        return expr-1.getClickedButtonId()
+        return expr-1.clickedButtonId()
         
 
-
-
-expression form id of [response ]%object%:
-    return type: string
-    get:
-        if expr-1.getFormId() is not null:
-            set {_id} to expr-1.getFormId()
-        else if expr-1.getFormID() is not null:
-            set {_id} to expr-1.getFormID()
-        return {_id}
+custom event "close form":
+    pattern: form close
+    event-values: player
 
 
 custom event "submit custom form":
@@ -204,71 +199,50 @@ expression [the] step slider display[s] %string% default step %number% with step
 expression input component [with] id %number% of [response ]%object%:
     return type: string
     get:
-        set {_r} to expr-2.getInput(expr-1)
+        set {_r} to expr-2.asInput(expr-1)
         return {_r}
 
 
 expression toggle component [with] id %number% of [response] %object%:
     return type: boolean
     get:
-        set {_r} to expr-2.getToggle(expr-1)
+        set {_r} to expr-2.asToggle(expr-1)
         return {_r}
 
 
 expression slider component [with] id %number% of [response] %object%:
     return type: number
     get:
-        set {_r} to expr-2.getSlider(expr-1)
+        set {_r} to expr-2.asSlider(expr-1)
         return {_r}
     
 
 expression step slide[r] component [with] id %number% of [response] %object%:
     return type: number
     get:
-        set {_r} to expr-2.getStepSlide(expr-1)
+        set {_r} to expr-2.asStepSlider(expr-1)
         return {_r}
 
 
 expression dropdown component [with] id %number% of [response] %object%:
     return type: number
     get:
-        set {_r} to expr-2.getDropdown(expr-1)
+        set {_r} to expr-2.asDropdown(expr-1)
         return {_r}
 
 
 expression form title of [response] %object%:
     return type: string
     get:
-        set {_r} to expr-1.getTitle()
+        set {_r} to expr-1.title()
         return {_r}
 
 
 expression component [with] id %number% of [response] %object%:
-    return type: string
+    return type: object
     get:
-        set {_t} to expr-2.getComponentTypes().toString().replaceAll("[\[\]]", "").split(",")
-        set {_t} to {_t}[expr-1]
-        if {_t} is "SLIDER":
-
-            set {_r} to expr-2.getSlider(expr-1)
         
-        else if {_t} is "STEP_SLIDER":
-
-            set {_r} to expr-2.getStepSlide(expr-1)
-
-        else if {t} is "TOGGLE":
-            
-            set {_r} to expr-2.getToggle(expr-1)
-            
-        else if {_t} is "DROPDOWN":
-
-            set {_r} to expr-2.getDropdown(expr-1)
-        
-        else if {_t} is "INPUT":
-
-            set {_r} to expr-2.getInput(expr-1)
-                
-        return "%{_r}%"
+        return expr-2.valueAt(expr-1)
 
 
 effect add %objects% to [form] %object%:
@@ -350,41 +324,32 @@ effect send[-| ]form %object%[ with id %-string%] to %player%:
         set {_F} to expr-1.build()
         
         if expr-2 is set:
-            if {_F}.getType() is FormType.SIMPLE_FORM:
+            if {_F} is instance of SimpleForm:
                 setListenerOnForm(expr-3, expr-1, expr-2, 1)
-            else if {_F}.getType() is FormType.MODAL_FORM:
+            else if {_F} is instance of ModalForm:
                 setListenerOnForm(expr-3, expr-1, expr-2, 2)
-            else if {_F}.getType() is FormType.CUSTOM_FORM:
+            else if {_F} is instance of CustomForm:
                 setListenerOnForm(expr-3, expr-1, expr-2, 3)
-        FloodgateApi.getInstance().sendForm(expr-3.getUniqueId(), {_F})
+        FloodgateApi.getInstance().getPlayer(expr-3.getUniqueId()).sendForm({_F})
         
-        
-expression parse response %string% by [form] %object%:
-    return type: object
-    get:
-        return expr-2.parseResponse(expr-1)
-        
-condition response %object% (1¦is|2¦is(n't| not)) closed:
-    check:
-        if mark is 1:
-            if expr-1.isClosed() is true:
-                continue
-        else if mark is 2:
-            if expr-1.isClosed() is false:
-                continue
-        
-condition response %object% (1¦is|2¦is(n't| not)) correct:
-    check:
-        if mark is 1:
-            if expr-1.isCorrect() is true:
-                continue
-        else if mark is 2:
-            if expr-1.isCorrect() is false:
-                continue
 
-expression response handler of %object%:
+
+expression (1¦valid|2¦invaild|3¦closed) result handler of %object%:
+    return type: object
     set:
-        expr-1.responseHandler(change value)
+        if mark is 1:
+            expr-1.validResultHandler(change value)
+        else if mark is 2:
+            expr-1.closedOrInvalidResultHandler(change value)
+        else:
+            expr-1.closedResultHandler(change value)
+    get:
+        if mark is 1:
+            return expr-1.validResultHandler()
+        else if mark is 2:
+            return expr-1.closedOrInvalidResultHandler()
+        else:
+            return expr-1.closedResultHandler()
 
 expression section handler %section%:
     return type: object
@@ -410,8 +375,8 @@ effect [send] transfer %player% to address %string% and port %number%:
         
 function setListenerOnForm(p: player, builder: object, id: text, type: number):
 
-    create section with {_proxy}, {_form}, {_data} stored in {_functions::accept}:
-        set {_r} to parse response {_data} by {_form}
+    create section with {_proxy}, {_form}, {_r} stored in {_handler::accept}:
+        
         
         set {_events::player} to {_p}
         set {_extras::form-id} to {_id}
@@ -419,25 +384,34 @@ function setListenerOnForm(p: player, builder: object, id: text, type: number):
         
         # simple
         if {_type} is 1:
-            set {_extras::form-title} to {_form}.getTitle()
-            set {_extras::button-id} to {_r}.getClickedButtonId()
-            set {_extras::button-name} to {_r}.getClickedButton().getText()
+            set {_extras::form-title} to {_form}.title()
+            set {_extras::button-id} to {_r}.clickedButtonId()
+            set {_extras::button-name} to {_r}.clickedButton().text()
             call custom event "click button of form" with {_events::*} data {_extras::*}
 
         # modal
         else if {_type} is 2:       
-            set {_extras::button-id} to {_r}.getClickedButtonId()
+            set {_extras::button-id} to {_r}.clickedButtonId()
             set {_extras::button-name} to {_r}.getClickedButtonText()
             call custom event "click button of form" with {_events::*} data {_extras::*}
 
         # custom
-        else if response {_r} isn't closed:
+        else:
 
-            set {_extras::form-title} to {_form}.getTitle()
+            set {_extras::form-title} to {_form}.title()
             call custom event "submit custom form" with {_events::*} data {_extras::*}
         
-    set {_proxy} to new proxy instance of BiConsumer using {_functions::*}
-    {_builder}.responseHandler({_proxy})
-
-
+    set {_proxy} to new proxy instance of BiConsumer using {_handler::*}
+    {_builder}.validResultHandler({_proxy})
+    create section with {_proxy}, {_form} stored in {_handler::accept}:
+        
+        
+        set {_events::player} to {_p}
+        set {_extras::form-id} to {_id}
+        set {_extras::form} to {_form}
+        
+        call custom event "close form" with {_events::*} data {_extras::*}
+        
+    set {_proxy} to new proxy instance of Consumer using {_handler::*}
+    {_builder}.closedResultHandler({_proxy})
 
