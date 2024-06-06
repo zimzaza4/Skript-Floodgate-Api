@@ -335,6 +335,7 @@ effect send[-| ]form %object%[ with id %-string%] to %player%:
 
 
 expression (1¦valid|2¦invaild|3¦closed) result handler of %object%:
+    return type: object
     set:
         if mark is 1:
             expr-1.validResultHandler(change value)
@@ -342,6 +343,13 @@ expression (1¦valid|2¦invaild|3¦closed) result handler of %object%:
             expr-1.closedOrInvalidResultHandler(change value)
         else:
             expr-1.closedResultHandler(change value)
+    get:
+        if mark is 1:
+            return expr-1.validResultHandler()
+        else if mark is 2:
+            return expr-1.closedOrInvalidResultHandler()
+        else:
+            return expr-1.closedResultHandler()
 
 expression section handler %section%:
     return type: object
