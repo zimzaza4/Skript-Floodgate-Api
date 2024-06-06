@@ -34,7 +34,7 @@ Add something to a Simple Form:
 add button display "button" to form {_simpleform}
 add button display "button with url image" with url icon "url" to form {_simpleform}
 add button display "button with path image" with path icon "path" to form {_simpleform}
-add content "content" to {_Form}
+add content "content" to form {_Form}
 ```
 Send Form:
 ```
@@ -60,4 +60,4 @@ on submit custom form:
 
 Extra:
 NPC Form
-[GeyserUtils](https://github.com/zimzaza4/GeyserUtils/tree/1.0.0)
+[GeyserUtils](https://github.com/zimzaza4/GeyserUtils
