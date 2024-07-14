@@ -75,7 +75,7 @@ effect add %objects% to [dialogue] %object%:
         loop {_a::*}:
             expr-2.buttons().add(loop-value)
             
-effect close dialogue of %player%
+effect close dialogue of %player%:
     trigger:
         NpcDialogueForm.closeForm(FloodgateApi.getInstance().getPlayer(expr-1.getUniqueId()))
             
